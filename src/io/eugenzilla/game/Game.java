@@ -3,6 +3,8 @@ package io.eugenzilla.game;
 import io.eugenzilla.display.Display;
 import io.eugenzilla.utils.Time;
 
+import java.awt.*;
+
 public class Game implements Runnable {
 
     public static final int WIDTH = 800;
@@ -17,11 +19,17 @@ public class Game implements Runnable {
 
     private boolean isRunning;
     private Thread gameThread;
+    private Graphics2D graphics2D;
 
+    float x = 350;
+    float y = 250;
+    float delta = 0;
+    float radius = 50;
 
     public Game() {
         isRunning = false;
         Display.create(WIDTH, HEIGHT, TITLE, CLEAR_COLOR, NUM_BUFFERS);
+        graphics2D = Display.getGraphics();
 
     }
 
@@ -48,10 +56,14 @@ public class Game implements Runnable {
     }
 
     private void update() { // рассчеты всей физики игры
-
+        delta += 0.02f;
     }
 
     private void render() { // отрисовка сцен
+        Display.clear();
+        graphics2D.setColor(Color.white);
+        graphics2D.fillOval((int)(x + Math.sin(delta)*200), (int)y, (int)radius*2, (int)radius*2);
+        Display.swapBuffers();
 
     }
 
