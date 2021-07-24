@@ -20,8 +20,6 @@ public abstract class Display {
 
     private static BufferStrategy bufferStrategy;
 
-    private static float delta = 0;
-
     public static void create(int width, int height, String title, int _clearColor, int numBuffers) {
         if (isCreated) {
             return;
@@ -44,6 +42,7 @@ public abstract class Display {
         bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         bufferedImageData = ((DataBufferInt) bufferedImage.getRaster().getDataBuffer()).getData(); // вытащить массив интегеров из изображения
         bufferedImageGraphics = bufferedImage.getGraphics();
+        ((Graphics2D) bufferedImageGraphics).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         clearColor = _clearColor;
 
@@ -57,24 +56,25 @@ public abstract class Display {
         Arrays.fill(bufferedImageData, clearColor);
     }
 
-    public static void render() {
-        bufferedImageGraphics.setColor(new Color(0xff0000ff)); //синий
-        bufferedImageGraphics.fillOval((int)(350 + Math.sin(delta)*200), 150, 100, 100);
-
-        ((Graphics2D)bufferedImageGraphics).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-        bufferedImageGraphics.fillOval((int)(350 + Math.sin(delta)*-200), 350, 100, 100);
-
-        ((Graphics2D)bufferedImageGraphics).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-
-
-        delta += 0.02f;
-    }
-
     public static void swapBuffers() {
         Graphics graphics = bufferStrategy.getDrawGraphics(); // вытаскиваем текущую графику канваса
         graphics.drawImage(bufferedImage, 0, 0, null); // заменяем графику на буфер
         bufferStrategy.show();
+    }
+
+    public static Graphics2D getGraphics() {
+        return (Graphics2D) bufferedImageGraphics;
+    }
+
+    public static void destroy() {
+        if (!isCreated) {
+            return;
+        }
+        window.dispose();
+    }
+
+    public static void setTitle (String title) {
+        window.setTitle(title);
     }
 
 }
