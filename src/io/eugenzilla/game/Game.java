@@ -1,9 +1,11 @@
 package io.eugenzilla.game;
 
+import io.eugenzilla.IO.Input;
 import io.eugenzilla.display.Display;
 import io.eugenzilla.utils.Time;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
 
 public class Game implements Runnable {
 
@@ -20,17 +22,20 @@ public class Game implements Runnable {
     private boolean isRunning;
     private Thread gameThread;
     private Graphics2D graphics2D;
+    private Input inputListener;
 
     float x = 350;
     float y = 250;
     float delta = 0;
     float radius = 50;
+    float speed = 3;
 
     public Game() {
         isRunning = false;
         Display.create(WIDTH, HEIGHT, TITLE, CLEAR_COLOR, NUM_BUFFERS);
         graphics2D = Display.getGraphics();
-
+        inputListener = new Input();
+        Display.addInputListener(inputListener);
     }
 
     public synchronized void start() { // функция может вызываться только из одного треда
@@ -56,13 +61,25 @@ public class Game implements Runnable {
     }
 
     private void update() { // рассчеты всей физики игры
-        delta += 0.02f;
+        //delta += 0.02f;
+        if(inputListener.getKey(KeyEvent.VK_UP)){
+            y -= speed;
+        }
+        if(inputListener.getKey(KeyEvent.VK_DOWN)){
+            y += speed;
+        }
+        if(inputListener.getKey(KeyEvent.VK_LEFT)){
+            x -= speed;
+        }
+        if(inputListener.getKey(KeyEvent.VK_RIGHT)){
+            x += speed;
+        }
     }
 
     private void render() { // отрисовка сцен
         Display.clear();
         graphics2D.setColor(Color.white);
-        graphics2D.fillOval((int)(x + Math.sin(delta)*200), (int)y, (int)radius*2, (int)radius*2);
+        graphics2D.fillOval((int)(x), (int)y, (int)radius*2, (int)radius*2);
         Display.swapBuffers();
 
     }
