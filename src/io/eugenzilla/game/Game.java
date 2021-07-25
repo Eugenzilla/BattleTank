@@ -29,14 +29,8 @@ public class Game implements Runnable {
     private Graphics2D graphics2D;
     private Input inputListener;
     private TextureAtlas textureAtlas;
-    private SpriteSheet spriteSheet;
-    private Sprite sprite;
+    private Player player;
 
-    float x = 350;
-    float y = 250;
-    float delta = 0;
-    float radius = 50;
-    float speed = 3;
 
     public Game() {
         isRunning = false;
@@ -45,8 +39,8 @@ public class Game implements Runnable {
         inputListener = new Input();
         Display.addInputListener(inputListener);
         textureAtlas = new TextureAtlas(ATLAS_FILENAME);
-        spriteSheet = new SpriteSheet(textureAtlas.cutImage(8 *16,5 *16, 16*2, 16), 2, 16);
-        sprite = new Sprite(spriteSheet, 1);
+        player = new Player(300,300, 2, 3, textureAtlas);
+
     }
 
     public synchronized void start() { // функция может вызываться только из одного треда
@@ -72,26 +66,13 @@ public class Game implements Runnable {
     }
 
     private void update() { // рассчеты всей физики игры
-        //delta += 0.02f;
-        if(inputListener.getKey(KeyEvent.VK_UP)){
-            y -= speed;
-        }
-        if(inputListener.getKey(KeyEvent.VK_DOWN)){
-            y += speed;
-        }
-        if(inputListener.getKey(KeyEvent.VK_LEFT)){
-            x -= speed;
-        }
-        if(inputListener.getKey(KeyEvent.VK_RIGHT)){
-            x += speed;
-        }
+        player.update(inputListener);
     }
 
     private void render() { // отрисовка сцен
         Display.clear();
-        sprite.render(graphics2D, x, y);
+        player.render(graphics2D);
         Display.swapBuffers();
-
     }
 
     @Override
