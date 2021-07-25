@@ -2,6 +2,7 @@ package io.eugenzilla.game;
 
 import io.eugenzilla.IO.Input;
 import io.eugenzilla.display.Display;
+import io.eugenzilla.game.level.Level;
 import io.eugenzilla.graphics.Sprite;
 import io.eugenzilla.graphics.SpriteSheet;
 import io.eugenzilla.graphics.TextureAtlas;
@@ -30,6 +31,7 @@ public class Game implements Runnable {
     private Input inputListener;
     private TextureAtlas textureAtlas;
     private Player player;
+    private Level level;
 
 
     public Game() {
@@ -40,7 +42,7 @@ public class Game implements Runnable {
         Display.addInputListener(inputListener);
         textureAtlas = new TextureAtlas(ATLAS_FILENAME);
         player = new Player(300,300, 2, 3, textureAtlas);
-
+        level = new Level(textureAtlas);
     }
 
     public synchronized void start() { // функция может вызываться только из одного треда
@@ -67,10 +69,12 @@ public class Game implements Runnable {
 
     private void update() { // рассчеты всей физики игры
         player.update(inputListener);
+        level.update();
     }
 
     private void render() { // отрисовка сцен
         Display.clear();
+        level.render(graphics2D);
         player.render(graphics2D);
         Display.swapBuffers();
     }
