@@ -2,6 +2,8 @@ package io.eugenzilla.game;
 
 import io.eugenzilla.IO.Input;
 import io.eugenzilla.display.Display;
+import io.eugenzilla.graphics.Sprite;
+import io.eugenzilla.graphics.SpriteSheet;
 import io.eugenzilla.graphics.TextureAtlas;
 import io.eugenzilla.utils.Time;
 
@@ -27,6 +29,8 @@ public class Game implements Runnable {
     private Graphics2D graphics2D;
     private Input inputListener;
     private TextureAtlas textureAtlas;
+    private SpriteSheet spriteSheet;
+    private Sprite sprite;
 
     float x = 350;
     float y = 250;
@@ -41,6 +45,8 @@ public class Game implements Runnable {
         inputListener = new Input();
         Display.addInputListener(inputListener);
         textureAtlas = new TextureAtlas(ATLAS_FILENAME);
+        spriteSheet = new SpriteSheet(textureAtlas.cutImage(8 *16,5 *16, 16*2, 16), 2, 16);
+        sprite = new Sprite(spriteSheet, 1);
     }
 
     public synchronized void start() { // функция может вызываться только из одного треда
@@ -83,10 +89,7 @@ public class Game implements Runnable {
 
     private void render() { // отрисовка сцен
         Display.clear();
-        graphics2D.setColor(Color.white);
-
-        graphics2D.drawImage(textureAtlas.cutImage(0,0,32,32), (int)x, (int)y, null);
-        //graphics2D.fillOval((int)(x), (int)y, (int)radius*2, (int)radius*2);
+        sprite.render(graphics2D, x, y);
         Display.swapBuffers();
 
     }
