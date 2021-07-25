@@ -2,6 +2,7 @@ package io.eugenzilla.game;
 
 import io.eugenzilla.IO.Input;
 import io.eugenzilla.display.Display;
+import io.eugenzilla.graphics.TextureAtlas;
 import io.eugenzilla.utils.Time;
 
 import java.awt.*;
@@ -19,10 +20,13 @@ public class Game implements Runnable {
     public static final float UPDATE_INTERVAL = Time.SECOND / UPDATE_RATE;
     public static final long IDLE_TIME = 1; // в милисекундах
 
+    public static final String ATLAS_FILENAME = "texture_atlas.png";
+
     private boolean isRunning;
     private Thread gameThread;
     private Graphics2D graphics2D;
     private Input inputListener;
+    private TextureAtlas textureAtlas;
 
     float x = 350;
     float y = 250;
@@ -36,6 +40,7 @@ public class Game implements Runnable {
         graphics2D = Display.getGraphics();
         inputListener = new Input();
         Display.addInputListener(inputListener);
+        textureAtlas = new TextureAtlas(ATLAS_FILENAME);
     }
 
     public synchronized void start() { // функция может вызываться только из одного треда
@@ -79,7 +84,9 @@ public class Game implements Runnable {
     private void render() { // отрисовка сцен
         Display.clear();
         graphics2D.setColor(Color.white);
-        graphics2D.fillOval((int)(x), (int)y, (int)radius*2, (int)radius*2);
+
+        graphics2D.drawImage(textureAtlas.cutImage(0,0,32,32), (int)x, (int)y, null);
+        //graphics2D.fillOval((int)(x), (int)y, (int)radius*2, (int)radius*2);
         Display.swapBuffers();
 
     }
