@@ -76,6 +76,7 @@ public class Game implements Runnable {
         Display.clear();
         level.render(graphics2D);
         player.render(graphics2D);
+        level.renderGrass(graphics2D);
         Display.swapBuffers();
     }
 
